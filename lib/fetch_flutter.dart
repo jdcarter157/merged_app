@@ -77,7 +77,8 @@ class Album {
       id: json['id'],
       title: json['title'],
       created: json['created'],
-      imageurl: json['imageurl'] ?? 'sampleurl',
+      imageurl: json['imageurl'] ??
+          'https://images.pexels.com/photos/949592/pexels-photo-949592.jpeg?cs=srgb&dl=pexels-rovenimagescom-949592.jpg&fm=jpg',
     );
   }
 }
@@ -120,7 +121,6 @@ class _FetchFlutterPageState extends State<FetchFlutterPage> {
                       snapshot.data![index].imageurl == ''
                           ? Text('No Album Art')
                           : Image.network(snapshot.data![index].imageurl),
-                      Text(snapshot.data![index].imageurl),
                       // Image.network(
                       //     'https://i.pinimg.com/736x/aa/fc/82/aafc8273fdf09f9a98f8127052e24cb7.jpg'),
                     ],

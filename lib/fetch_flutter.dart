@@ -6,21 +6,11 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-// ISHHHH
-// Future getUserInfo() async {
-//     var user = await const User().getUser();
-//     var url = 'https://16c9-108-36-126-67.ngrok.io/userinfo';
-//     var response = await http.post(Uri.parse(url), body: json.encode(user));
-//     Map<String, dynamic> data =
-//         Map<String, dynamic>.from(json.decode(response.body));
-//     log(data.toString());
-//     setState(() {
-//       name = data['first_name'];
-//     });
-//   }
 
+// connecting to the api endpoint
 Future<List<Album>> fetchAlbum() async {
-  var url = 'http://192.168.0.136/cross_plat_sharing/flutter_share.php';
+  var url = 'http://192.168.0.140/cross_plat_sharing/flutter_share.php';
+  // "http://10.0.0.233/cross_plat_sharing/flutter_share.php"
 
   final response = await http.post(Uri.parse(url));
   // print(response.body);
@@ -29,7 +19,6 @@ Future<List<Album>> fetchAlbum() async {
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
     // then parse the JSON.
-    // return <List<Album>>().fromJson(jsonDecode(response.body));
     Iterable l = json.decode(response.body);
     return List<Album>.from(l.map((model) => Album.fromJson(model)));
   } else {
@@ -70,16 +59,17 @@ class Album {
   });
 
   factory Album.fromJson(Map<String, dynamic> json) {
-    print(json);
-    print(
-        "${json['id']} ${json['title']} ${json['created']} ${json['imageurl']}");
+    // print(json);
+    // print("${json['id']} ${json['title']} ${json['created']} ${json['imageurl']}");
     return Album(
+      // building album from json keys
       id: json['id'],
       title: json['title'],
       created: json['created'],
       imageurl: json['imageurl'] ??
           'https://images.pexels.com/photos/949592/pexels-photo-949592.jpeg?cs=srgb&dl=pexels-rovenimagescom-949592.jpg&fm=jpg',
     );
+    // /if imageurl is null use default image url
   }
 }
 
@@ -110,11 +100,13 @@ class _FetchFlutterPageState extends State<FetchFlutterPage> {
         body: FutureBuilder<List<Album>>(
           future: futureAlbum,
           builder: (context, snapshot) {
+            // if json is ready return list of post(albums)
             if (snapshot.hasData) {
               return ListView.builder(
                 itemCount: snapshot.data?.length,
                 itemBuilder: (context, index) {
                   return Column(
+                    // display data pulled from db
                     children: [
                       Text(snapshot.data![index].title),
                       Text(snapshot.data![index].created),
@@ -127,25 +119,11 @@ class _FetchFlutterPageState extends State<FetchFlutterPage> {
                   );
                 },
               );
-              // for (int i = 0; i < 10; i++) {
-              //   // loop thru snapshot.data and
-              //   // set var data= snapshot.data[i]
-              //   // newvar=i
-              //   var data = snapshot.data![i];
-              //   print(data);
-              //   return Column(
-              //     children: [
-              //       // Text('${data}'),
-              //     ],
-              //   );
-              // }
-              // ;
-
             } else if (snapshot.hasError) {
               return Text('${snapshot.error} WHAHWHAHA');
             }
 
-            // By default, show a loading spinner.
+            //show a loading spinner
             return const CircularProgressIndicator();
           },
         ),
